@@ -1,0 +1,4 @@
+The Python main.py is not integrated with the mqtt files yet. Due to the fact you cannot have a constant loop in the paho mqtt
+broker, I thought to use the main.py file to call and execute the broker file on mqtt. This is yet to be done, will have it done
+tomorrow. Right now you can manually call the publish (only got one sensor in it, will need to create more, thinking of using 
+multiple instead of single to publish, cleaner this way).
