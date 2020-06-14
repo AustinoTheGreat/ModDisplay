@@ -1,7 +1,6 @@
 """
 Created on Fri Jun 12 10:46:20 2020
-
-@author: joelbinu
+@author: joelbinu, AustinoTheGreat :)
 """
 from PIL import Image
 
@@ -9,9 +8,10 @@ from PIL import Image
 
 # m1 is the left sensor
 # m2 is the top sensor
-def main(m1, m2):
+def main(img, m1, m2, IMU):
 
-    image = Image.open("/home/pi/ModDisplay/Image repo/vector1.jpg")
+    #image = Image.open("/home/pi/ModDisplay/Image repo/vector1.jpg")
+    image = img
 
     width = image.size[0]
     height = image.size[1]
@@ -51,15 +51,17 @@ def main(m1, m2):
             
     def crop(left, right, top, bottom):
         im1 = image2.crop((left, top, right, bottom))
-        im1.show()
-        # We cannot use img.show(), it spawns an external handle that we can't control, need a better method here
+
+        if(IMU == "1"):
+            im1.show()
+        elif(IMU == "2"):
+            im1.rotate(180).show()
+        elif(IMU == "3"):
+            im1.rotate(90).show()
+        elif(IMU == "4"):
+            im1.rotate(270).show()
         
     orientation(m1, m2)
 
     print (width)
     print (height)
-
-        
-        
-            
-            
