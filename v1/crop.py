@@ -52,6 +52,7 @@ def main(m1, m2):
     def crop(left, right, top, bottom):
         im1 = image2.crop((left, top, right, bottom))
         im1.show()
+        # We cannot use img.show(), it spawns an external handle that we can't control, need a better method here
         
     orientation(m1, m2)
 
