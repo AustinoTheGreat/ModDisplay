@@ -6,7 +6,7 @@
 import paho.mqtt.client as mqtt
 from PIL import Image
 import crop
-import rotate
+#import rotate
 
 #Use this class to store multiple P5
 class Pi:
