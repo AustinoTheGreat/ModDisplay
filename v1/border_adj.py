@@ -88,3 +88,5 @@ def main(num, m1, m2, IMU, path):
         img2 = im2_new.crop((width/2, height/2, width, height))
 
     img2.save('pic/display' + str(num) + '.jpg', quality=95)
+    
+    # The name of the file for the singular display being saved has to be a constant for the file-transfer file to pick up for FTP.
