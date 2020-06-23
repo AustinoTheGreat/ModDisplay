@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# maybe this link will help https://stackoverflow.com/questions/44720580/resize-image-canvas-to-maintain-square-aspect-ratio-in-python-opencv
+# maybe this link will help
 """
 Created on Mon Jun 22 13:26:26 2020
 @author: joelbinu
@@ -29,29 +29,29 @@ im = image
 (height, width) = image.shape[:2]
 print(str(height) + " " + str(width))
 
-# if (m1 == 0) and (m2 == 0):
-#     if (width > 800) or (height > 480):
-#         im = crop(image, 800, 480, width, height)
-# elif (m1 == 1) and (m2 == 0):
-#     if (width > 1600) or (height > 480):
-#         im = crop(image, 1600, 480, width, height)
-# elif (m1 == 0) and (m2 == 1):
-#     if (width > 800) or (height > 960):
-#         im = crop(image, 800, 960, width, height)
-# elif (m1 == 1) and (m2 == 1):
-#     if (width > 1600) or (height > 960):
-#         im = crop(image, 1600, 960, width, height)
+if (m1 == 0) and (m2 == 0):
+    if (width > 1024) or (height > 600):
+        im = crop(image, 1024, 600, width, height)
+elif (m1 == 1) and (m2 == 0):
+    if (width > 2048) or (height > 600):
+        im = crop(image, 2048, 600, width, height)
+elif (m1 == 0) and (m2 == 1):
+    if (width > 1024) or (height > 1200):
+        im = crop(image, 1024, 1200, width, height)
+elif (m1 == 1) and (m2 == 1):
+    if (width > 2048) or (height > 1200):
+        im = crop(image, 2048, 1200, width, height)
 
 
 
 if (m1 == 0) and (m2 == 0):
-    im2_new = border_man(im, width, height, 800, 480)
+    im2_new = border_man(im, width, height, 1024, 600)
 elif (m1 == 1) and (m2 == 0):
-    im2_new = border_man(im, width, height, 1600, 480)
+    im2_new = border_man(im, width, height, 2048, 600)
 elif (m1 == 0) and (m2 == 1):
-    im2_new = border_man(im, width, height, 800, 960)
+    im2_new = border_man(im, width, height, 1024, 1200)
 elif (m1 == 1) and (m2 == 1):
-    im2_new = border_man(im, width, height, 1600, 960)
+    im2_new = border_man(im, width, height, 2048, 1200)
 
 
 cv2.imshow("overall_image_displayed", im2_new)
@@ -68,7 +68,7 @@ elif (m1 == 1) and (m2 == 0):
     img2 = im2_new[int (width/2) : width, 0 : height]
 elif (m1 == 0) and (m2 == 1):
     (height, width) = im2_new.shape[:2]
-    img2 = im2_new[0 : width, int (height/2) : height]
+    img2 = im2_new[int (height/2) : height, 0 : width]
 elif (m1 == 1) and (m2 == 1):
     (height, width) = im2_new.shape[:2]
     print(str(height) + " " + str(width))
