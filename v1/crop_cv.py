@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# maybe this link will help
 """
 Created on Mon Jun 22 13:26:26 2020
+
 @author: joelbinu
 """
-from cv2 import cv2
+import cv2
 
 global height
 global width
 
-image = cv2.imread('pic/old_campus.jpg')
+image = cv2.imread('/Users/joelbinu/Desktop/ModDisplay /Image repo/Produced_images/overall_image_produced.jpg')
 
 def crop(im, n_width, n_height, width, height):
 
-    image2 = im[int ((height - n_height)/2) : int (((height - n_height)/2) + n_height),  int ((width - n_width)/ 2) : int (((width - n_width)/ 2) + n_width), ]
+    image2 = im[ int ((height - n_height)/2) : int (((height - n_height)/2) + n_height), int ((width - n_width)/ 2) : int (((width - n_width)/ 2) + n_width)]
     return image2
 
 def border_man(im, width, height, w_width, w_height):
@@ -22,12 +22,11 @@ def border_man(im, width, height, w_width, w_height):
      return im
 
 m1 = 1
-m2 = 1
+m2 = 0
 
 im = image
 
 (height, width) = image.shape[:2]
-print(str(height) + " " + str(width))
 
 if (m1 == 0) and (m2 == 0):
     if (width > 1024) or (height > 600):
@@ -58,27 +57,27 @@ cv2.imshow("overall_image_displayed", im2_new)
 
 cv2.waitKey(0)
 
+cv2.destroyAllWindows()
+
 print (im2_new.shape[:2])
+
+
 
 if (m1 == 0) and (m2 == 0):
     (height, width) = im2_new.shape[:2]
     img2 = im2_new
 elif (m1 == 1) and (m2 == 0):
     (height, width) = im2_new.shape[:2]
-    img2 = im2_new[int (width/2) : width, 0 : height]
+    img2 = im2_new[ 0 : height, int (width/2) : width]
 elif (m1 == 0) and (m2 == 1):
     (height, width) = im2_new.shape[:2]
     img2 = im2_new[int (height/2) : height, 0 : width]
 elif (m1 == 1) and (m2 == 1):
     (height, width) = im2_new.shape[:2]
-    print(str(height) + " " + str(width))
-    img2 = im2_new[int(height/2) : int(height), int(width/2) : int(width)]
-    # img2 = im2_new[int (width/2): int(width), int(height/2) : int(height)]
+    img2 = im2_new[int(height/2) : height, int (width/2): width]
 
-
-
-cv2.imshow("single_display_image_produced", img2)
+cv2.imshow("single-display-image", img2)
 
 cv2.waitKey(0)
-print (img2.shape[:2])
+
 cv2.destroyAllWindows()
