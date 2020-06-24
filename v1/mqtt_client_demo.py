@@ -2,7 +2,7 @@
  
 import paho.mqtt.client as mqtt
 from PIL import Image
-import border_adj
+import crop_flex
 
 MQTT_BROKER = "test.mosquitto.org"
 MQTT_PORT = 1883
