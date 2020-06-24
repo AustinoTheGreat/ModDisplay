@@ -16,16 +16,6 @@ elif r == "v":
 image = cv2.imread('pic/large.jpg')
 (height, width) = image.shape[:2]
 
-
-def crop1(im, n_width, n_height, width, height):
-
-    image2 = im[int ((height - n_height)/2) : int (((height - n_height)/2) + n_height),  int ((width - n_width)/ 2) : int (((width - n_width)/ 2) + n_width)]
-    return image2
-
-def border_man(im, width, height, w_width, w_height):
-     im = cv2.copyMakeBorder(im, int ((w_height - height)/2) , int ((w_height - height)/2) , int ((w_width - width)/2), int ((w_width - width)/2), cv2.BORDER_CONSTANT, None, 0)
-     return im
-
 if (width > dw):
     image = image[0:height, int((width - dw)/ 2) : int(((width - dw)/ 2) + dw)]
 else:
