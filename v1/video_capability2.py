@@ -28,7 +28,7 @@ cap = cv2.VideoCapture('/Users/joelbinu/Desktop/ModDisplay /Image repo/Microscop
 
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 
-outcrop = cv2.VideoWriter('/Users/joelbinu/Desktop/ModDisplay /Image repo/cropped_video.mp4', fourcc, 60, (dw, dh))
+outcrop = cv2.VideoWriter('/Users/joelbinu/Desktop/ModDisplay /Image repo/cropped_video2.mp4', fourcc, 60, (dw, dh))
 
 while True:
 
@@ -50,26 +50,31 @@ while True:
     else:
         image = cv2.copyMakeBorder(image, int((dh - height)/2) , int((dh - height)/2), 0, 0, cv2.BORDER_CONSTANT, None, 0)
 
-    cv2.imshow('Video', image)
+    #cv2.imshow('Video', image)
 
     outcrop.write(image)
 
-    cv2.imwrite("/Users/joelbinu/Desktop/ModDisplay /Image repo/Produced_images/export-display" + ".jpg", image)
 
+
+
+
+
+
+    
     #sky = frame[0:100, 0:200]
 
-    for i in range(0, w):
-        for j in range(0, h):
-            (height, width) = image.shape[:2]
-            img = image[int(height/h) * j : int(height/h) * (j + 1), int(width/w) * i : int(width/w) * (i + 1)]
-            cv2.imshow("video", img)
+    #for i in range(0, w):
+    #    for j in range(0, h):
+    #        (height, width) = image.shape[:2]
+    #        img = image[int(height/h) * j : int(height/h) * (j + 1), int(width/w) * i : int(width/w) * (i + 1)]
+    #        cv2.imshow("video", img)
             # cv2.waitKey(0)
             # cv2.destroyAllWindows()
             # cv2.imwrite("/Users/joelbinu/Desktop/ModDisplay /Image repo/Produced_images/export-display" + str(j) + str(i) + ".jpg", img)
 
     # cv2.imshow('Video', image)
 
-    if cv2.waitKey(1) == 27:
+    if cv2.waitKey(0) == 27: # Escape Key for code of 27, and to exit the video
 
         exit(0)
 
