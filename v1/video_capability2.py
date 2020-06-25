@@ -26,13 +26,15 @@ elif r == "v":
 
 cap = cv2.VideoCapture('/Users/joelbinu/Desktop/ModDisplay /Image repo/Microscope_5__Scientist__Videvo.mov')
 
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+
+outcrop = cv2.VideoWriter('/Users/joelbinu/Desktop/ModDisplay /Image repo/cropped_video.mp4', fourcc, 60, (dw, dh))
+
 while True:
 
     ret, frame = cap.read()
 
     width, height = int (cap.get(3)), int (cap.get(4))
-
-    print (width, height)
 
     if not ret:
 
@@ -49,6 +51,8 @@ while True:
         image = cv2.copyMakeBorder(image, int((dh - height)/2) , int((dh - height)/2), 0, 0, cv2.BORDER_CONSTANT, None, 0)
 
     cv2.imshow('Video', image)
+
+    outcrop.write(image)
 
     cv2.imwrite("/Users/joelbinu/Desktop/ModDisplay /Image repo/Produced_images/export-display" + ".jpg", image)
 
@@ -69,4 +73,6 @@ while True:
 
         exit(0)
 
+cap.release()
+outcrop.release()
 cv2.destroyAllWindows()
