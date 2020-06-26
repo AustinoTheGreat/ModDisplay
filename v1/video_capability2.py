@@ -8,11 +8,13 @@ Created on Thu Jun 25 11:07:47 2020
 
 import cv2
 
+
 r = "h"
 h = 2
-w = 1
+w = 3
 dh = 0
 dw = 0
+
 
 if r == "h":
 
@@ -24,11 +26,15 @@ elif r == "v":
     dh = h* 1024
     dw = w * 600
 
-cap = cv2.VideoCapture('/Users/joelbinu/Desktop/ModDisplay /Image repo/Microscope_5__Scientist__Videvo.mov')
+
+
+
+cap = cv2.VideoCapture('/Users/joelbinu/Desktop/ModDisplay /Image repo/Video_handling/Original.mov') # for teesting on your local machine, change this path to the source of the original video
 
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 
-outcrop = cv2.VideoWriter('/Users/joelbinu/Desktop/ModDisplay /Image repo/cropped_video2.mp4', fourcc, 60, (dw, dh))
+outcrop = cv2.VideoWriter('/Users/joelbinu/Desktop/ModDisplay /Image repo/Video_handling/cropped_video.mp4', fourcc, 60, (dw, dh)) # destination of the cropped video for the entire display orientation
+
 
 while True:
 
@@ -50,34 +56,11 @@ while True:
     else:
         image = cv2.copyMakeBorder(image, int((dh - height)/2) , int((dh - height)/2), 0, 0, cv2.BORDER_CONSTANT, None, 0)
 
-    #cv2.imshow('Video', image)
+    cv2.imshow('Video', image)
 
     outcrop.write(image)
-
-
-
-
-
-
-
-    
-    #sky = frame[0:100, 0:200]
-
-    #for i in range(0, w):
-    #    for j in range(0, h):
-    #        (height, width) = image.shape[:2]
-    #        img = image[int(height/h) * j : int(height/h) * (j + 1), int(width/w) * i : int(width/w) * (i + 1)]
-    #        cv2.imshow("video", img)
-            # cv2.waitKey(0)
-            # cv2.destroyAllWindows()
-            # cv2.imwrite("/Users/joelbinu/Desktop/ModDisplay /Image repo/Produced_images/export-display" + str(j) + str(i) + ".jpg", img)
-
-    # cv2.imshow('Video', image)
-
-    if cv2.waitKey(0) == 27: # Escape Key for code of 27, and to exit the video
-
-        exit(0)
 
 cap.release()
 outcrop.release()
 cv2.destroyAllWindows()
+
