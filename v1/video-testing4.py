@@ -20,12 +20,13 @@ if r == "h":
 
     dh = h * 600
     dw = w * 1024
+    o = (1024, 600)
 
 elif r == "v":
 
     dh = h* 1024
     dw = w * 600
-
+    o = (600, 1024)
 
 outcrop = []
 
@@ -39,7 +40,7 @@ fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 
 for counter in range(1,tot+1):
 
-    outcrop[counter] = cv2.VideoWriter('/Users/joelbinu/Desktop/ModDisplay /Image repo/Video_handling_comb/' + 'cropped_video' + str(counter) + '.mp4', fourcc, 60, (1024, 600)) # destination of each of the cropped videos
+    outcrop[counter] = cv2.VideoWriter('/Users/joelbinu/Desktop/ModDisplay /Image repo/Video_handling_comb/' + 'cropped_video' + str(counter) + '.mp4', fourcc, 60, o) # destination of each of the cropped videos
 
 
 while True:
