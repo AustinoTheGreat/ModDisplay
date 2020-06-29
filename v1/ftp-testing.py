@@ -11,7 +11,7 @@ filename = 'single-display-image.jpg'
 
 ftp = ftplib.FTP('192.168.0.157')
 
-ftp.login("pi", "infinityone")
+ftp.login("pi", "password")
 
 ftp.cwd('files')
 
