@@ -127,10 +127,10 @@ while True:
 
             outcrop[counter].write(img)
 
-    #key = cv2.waitKey(1)
+    key = cv2.waitKey(1)
 
-    #if key == 32:
-    #    cv2.waitKey()
+    if key == 32:
+        cv2.waitKey()
 
     h = int(input("what is the value of the height?"))
 
