@@ -1,0 +1,1 @@
+DISPLAY=:0 chromium 'file:///INSERT FILE DIRECTORY HERE'
