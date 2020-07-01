@@ -1,9 +1,13 @@
-1. Arguments: a video file, the height and width values of the display orientation. 
+1. File Name : video-parsing1.py
+
+   Arguments: a video file, the height and width values of the display orientation. 
    Output   : multiple video files, cropped to the individual display size. 
    Drawbacks: if the orientation of the display is increased beyond the original set up (h and w exceed the originally aggreed values), 
               the set up will need to be restarted in order to accomodate.
    Advantages: as long as the added displays are within the constraints of the original set up, there is no issue. The time stamp of the added display can be                      changed to the time stamp of the currnet displays during playback. 
-             
+           
+           
+      
 2. Arguments: a video file, the height and width values of the display orientation. 
    Output   : individual frames, which are produced and sent sequentially.
    Drawbacks: possible latency issues during playback, since this relies on FTP's time contraints.
