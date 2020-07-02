@@ -1,0 +1,142 @@
+# https://www.youtube.com/watch?v=Pb3FLznsdwI&t=449s
+ 
+import paho.mqtt.client as mqtt
+from PIL import Image
+import border_adj
+
+MQTT_BROKER = "test.mosquitto.org"
+MQTT_PORT = 1883
+MQTT_TOPICS = [("RPi/0", 0), ("RPi/1", 0)]
+width = input("Enter total number of displays that will be connected horizontally: ")
+height = input("Enter total number of displays that will be connected vertically: ")
+orientation = input("Whether if displays are orientated horizontally (h) or vertically (v): ")
+
+picPath = input("Enter your picture's full directory path or enter d to use default: ")
+if (picPath == "d"):
+    picPath = "pic/original-image.jpg"
+
+#Use this class to store multiple Pi
+class Pi:
+    def __init__(self, number, mA, mB, IMU, ip, posX, posY, inUse):
+        self.number = number
+        self.mA = mA
+        self.mB = mB
+        self.IMU = IMU
+        self.ip = ip
+        self.posX = posX
+        self.posY = posY
+        self.inUse = inUse
+pi = []
+nextPos = "nn"
+numInUse = 0
+width = int(width)
+height = int(height)
+
+for i in range(0, len(MQTT_TOPICS)):
+    print(i)
+    pi.append(Pi(i, "F", "F", "1", "0", "0", "0", False))
+ 
+# p1 = Pi(1, "F", "F", "1")
+# p2 = Pi(2, "F", "F", "1")
+
+def printPos():
+    for x in pi:
+        print(str(x.number) + " " + str(x.posX) + " " + str(x.posY) + " " + str(x.inUse))
+
+# The callback for when the client receives a CONNACK response from the server.
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code "+str(rc))
+    client.subscribe(MQTT_TOPICS)
+
+ 
+# The callback for when a PUBLISH message is received from the server.
+def on_message(client, userdata, msg):
+    global pi
+    global nextPos
+    global numInUse
+    global width
+    global height
+
+    msg = msg.payload.decode('UTF-8')
+    print(msg)
+
+    for i in range(0, len(MQTT_TOPICS)):
+        if(msg[0] == str(i)):
+            prevA = pi[i].mA
+            prevB = pi[i].mB
+            print(str(i))
+
+            pi[i].mA = msg[1]
+            pi[i].mB = msg[2]
+            pi[i].IMU = msg[3]
+            pi[i].ip = msg.partition("/")[2]
+            print(pi[i].ip)
+            # if (pi[i].mA == "T"):
+            #     pi[i].mA = 1
+            # else:
+            #     pi[i].mA = 0
+            # if (pi[i].mB == "T"):
+            #     pi[i].mB = 1
+            # else:
+            #     pi[i].mB = 0
+            
+            if (prevA != pi[i].mA):
+                print("A change" + str(i))
+                if (pi[i].IMU == "1"):
+                    nextPos = str(int(pi[i].posX) - 1) + str(pi[i].posY)
+                elif (pi[i].IMU == "2"):
+                    nextPos = str(int(pi[i].posX) + 1) + str(pi[i].posY)
+                elif (pi[i].IMU == "3"):
+                    nextPos = str(pi[i].posX) + str(int(pi[i].posY) - 1)
+                elif (pi[i].IMU == "4"):
+                    nextPos = str(pi[i].posX) + str(int(pi[i].posY) + 1)
+                print(nextPos)
+            elif (prevB != pi[i].mB):
+                print("B change" + str(i))
+                if (pi[i].IMU == "1"):
+                    nextPos = str(pi[i].posX) + str(int(pi[i].posY) - 1)
+                elif (pi[i].IMU == "2"):
+                    nextPos = str(pi[i].posX) + str(int(pi[i].posY)+ 1)
+                elif (pi[i].IMU == "3"):
+                    nextPos = str(int(pi[i].posX) + 1) + str(pi[i].posY)
+                elif (pi[i].IMU == "4"):
+                    nextPos = str(int(pi[i].posX) - 1) + str(pi[i].posY)
+                print(nextPos)
+            print(str(numInUse) + " " + nextPos)
+
+            if (numInUse == 0 and nextPos == "nn"):
+                print("Anchor is: " + str(i))
+                pi[i].inUse = True
+                numInUse = numInUse + 1
+                if (pi[i].IMU == "1"):
+                    pi[i].posX = str(width - 1)
+                    pi[i].posY = str(height - 1)
+                elif (pi[i].IMU == "2"):
+                    pi[i].posX = str(0)
+                    pi[i].posY = str(0)
+                elif (pi[i].IMU == "3"):
+                    pi[i].posX = str(0)
+                    pi[i].posY = str(height - 1)
+                elif (pi[i].IMU == "4"):
+                    pi[i].posX = str(width - 1)
+                    pi[i].posY = str(0)
+                
+                print(pi[i].posX + " " + pi[i].posY)
+            elif (numInUse != 0 and nextPos != "nn" and pi[i].inUse == False):
+                pi[i].inUse = True
+                numInUse = numInUse + 1
+                pi[i].posX = nextPos[0]
+                pi[i].posY = nextPos[1]
+                print("mhm")
+    print("end")
+
+ 
+# Create an MQTT client and attach our routines to it.
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+ 
+client.connect(MQTT_BROKER, MQTT_PORT, 60)
+
+# https://github.com/eclipse/paho.mqtt.python
+client.loop_forever()
