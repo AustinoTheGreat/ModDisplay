@@ -6,7 +6,7 @@ Created on Thu Jun 18 16:52:29 2020
 @author: joelbinu
 """
 
-def main(filename, ip-address, username, password, origin-path) : 
+def main(filename, ipaddress, username, password, filepath) : 
   
   import ftplib
 
