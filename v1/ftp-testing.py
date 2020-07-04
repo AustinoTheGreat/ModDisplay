@@ -5,19 +5,22 @@ Created on Thu Jun 18 16:52:29 2020
 
 @author: joelbinu
 """
-import ftplib
 
-filename = 'single-display-image.jpg'
+def main(filename, ip-address, username, password, origin-path) : 
+  
+  import ftplib
 
-ftp = ftplib.FTP('192.168.0.157')
+  filename = 'single-display-image.jpg'
 
-ftp.login("pi", "password")
+  ftp = ftplib.FTP('192.168.0.157')
 
-ftp.cwd('files')
+  ftp.login("pi", "password")
 
-myfile = open('/Users/joelbinu/Desktop/ModDisplay /Image repo/Produced_images/single-display-image.jpg', 'rb')
+  ftp.cwd('files')
 
-ftp.storbinary('STOR ' + filename, myfile)
+  myfile = open('/Users/joelbinu/Desktop/ModDisplay /Image repo/Produced_images/single-display-image.jpg', 'rb')
+
+  ftp.storbinary('STOR ' + filename, myfile)
 
 
 
