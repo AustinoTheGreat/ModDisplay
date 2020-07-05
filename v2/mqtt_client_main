@@ -40,7 +40,7 @@ for i in range(0, len(MQTT_TOPICS)):
 
 def printPos():
     for x in pi:
-        print(str(x.number) + " " + str(x.posX) + " " + str(x.posY) + " " + str(x.inUse))
+        print("Pi Number: " + str(x.number) + " Pos: (X Y) " + str(x.posX) + " " + str(x.posY) + " State: " + str(x.inUse))
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -97,14 +97,13 @@ def on_message(client, userdata, msg):
                         width = width + 1
 
             if (numInUse == 0 and nextPos == "nn"):
-                print("Anchor is: " + str(i))
                 pi[i].inUse = True
                 numInUse = numInUse + 1
                 height = 1
                 width = 1
                 if (pi[i].IMU == "1" or pi[i].IMU == "2"):
                     orientation = "h"
-                elif (p[i].IMU == "3" or pi[i].IMU == "4"):
+                elif (pi[i].IMU == "3" or pi[i].IMU == "4"):
                     orientation = "v"
                 crop_flex.main(height, width, pi[i].IMU, orientation, picPath)
 
@@ -114,7 +113,8 @@ def on_message(client, userdata, msg):
                 pi[i].posX = int(nextPos[0])
                 pi[i].posY = int(nextPos[1])
                 crop_flex.main(height, width, pi[i].IMU, orientation, picPath)
-    print("end")
+    printPos()
+    # print("end")
 
  
 # Create an MQTT client and attach our routines to it.
