@@ -1,8 +1,10 @@
 # https://www.youtube.com/watch?v=Pb3FLznsdwI&t=449s
- 
+
 import paho.mqtt.client as mqtt
 from PIL import Image
 import crop_flex
+import ftptesting
+import ftplib
 
 
 MQTT_BROKER = "test.mosquitto.org"
@@ -34,7 +36,7 @@ numInUse = 0
 for i in range(0, len(MQTT_TOPICS)):
     print(i)
     pi.append(Pi(i, "F", "F", "1", "0", 0, 0, False))
- 
+
 # p1 = Pi(1, "F", "F", "1")
 # p2 = Pi(2, "F", "F", "1")
 
@@ -47,7 +49,7 @@ def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
     client.subscribe(MQTT_TOPICS)
 
- 
+
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     global pi
@@ -59,7 +61,7 @@ def on_message(client, userdata, msg):
     global height
     global width
     global picPath
-    
+
     msg = msg.payload.decode('UTF-8')
     print(msg)
 
@@ -73,7 +75,7 @@ def on_message(client, userdata, msg):
             pi[i].IMU = msg[3]
             pi[i].ip = msg.partition("/")[2]
             print(pi[i].ip)
-            
+
             if (prevA != pi[i].mA):
                 print("A change: " + str(i))
                 if (pi[i].IMU == "1" or pi[i].IMU == "2"):
@@ -106,21 +108,50 @@ def on_message(client, userdata, msg):
                     orientation = "v"
                 crop_flex.main(height, width, pi[i].IMU, orientation, picPath)
 
+                for counter in range(0, len(MQTT_TOPICS)):
+
+                        for h in range(0, height):
+
+                            for w in range(0, width):
+
+                                if (str(pi[counter].posX) + str(pi[counter].posY) == str(h) + str(w)):
+
+                                    filename = ("display" + str(pi[counter].posX) + str(pi[counter].posY) + ".jpg")
+
+                                    ftptesting.main(filename, pi[counter].ip, "pi", "raspberry", "export/" + filename)
+
+
             elif (numInUse != 0 and nextPos != "nn" and pi[i].inUse == False):
                 pi[i].inUse = True
                 numInUse = numInUse + 1
                 pi[i].posX = int(nextPos[0])
                 pi[i].posY = int(nextPos[1])
                 crop_flex.main(height, width, pi[i].IMU, orientation, picPath)
+
+                for counter in range(0, len(MQTT_TOPICS)):
+
+                        for h in range(0, height):
+
+                            for w in range(0, width):
+
+                                if (str(pi[counter].posX) + str(pi[counter].posY) == str(h) + str(w)):
+
+                                    filename = ("display" + str(pi[counter].posX) + str(pi[counter].posY) + ".jpg")
+
+                                    ftptesting.main(filename, pi[counter].ip, "pi", "raspberry", "export/" + filename)
+
+
+
+
     printPos()
     # print("end")
 
- 
+
 # Create an MQTT client and attach our routines to it.
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
- 
+
 client.connect(MQTT_BROKER, MQTT_PORT, 60)
 
 # https://github.com/eclipse/paho.mqtt.python
