@@ -67,7 +67,6 @@ def on_message(client, userdata, msg):
         if(msg[0] == str(i)):
             prevA = pi[i].mA
             prevB = pi[i].mB
-            print(str(i))
 
             pi[i].mA = msg[1]
             pi[i].mB = msg[2]
@@ -76,7 +75,7 @@ def on_message(client, userdata, msg):
             print(pi[i].ip)
             
             if (prevA != pi[i].mA):
-                print("A change" + str(i))
+                print("A change: " + str(i))
                 if (pi[i].IMU == "1" or pi[i].IMU == "2"):
                     nextPos = str(pi[i].posX + 1) + str(pi[i].posY)
                     if (pi[i].posX + 1 >= width):
@@ -86,7 +85,7 @@ def on_message(client, userdata, msg):
                     if (pi[i].posY + 1 >= height):
                         height = height + 1
             elif (prevB != pi[i].mB):
-                print("B change" + str(i))
+                print("B change: " + str(i))
                 if (pi[i].IMU == "1" or pi[i].IMU == "2"):
                     nextPos = str(pi[i].posX) + str(pi[i].posY + 1)
                     if (pi[i].posY + 1 >= height):
