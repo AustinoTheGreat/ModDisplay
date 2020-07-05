@@ -2,14 +2,15 @@
  
 import paho.mqtt.client as mqtt
 from PIL import Image
-import border_adj
+import crop_flex
+
 
 MQTT_BROKER = "test.mosquitto.org"
 MQTT_PORT = 1883
 MQTT_TOPICS = [("RPi/0", 0), ("RPi/1", 0)]
-width = input("Enter total number of displays that will be connected horizontally: ")
-height = input("Enter total number of displays that will be connected vertically: ")
-orientation = input("Whether if displays are orientated horizontally (h) or vertically (v): ")
+width = 0
+height = 0
+orientation = "n"
 
 picPath = input("Enter your picture's full directory path or enter d to use default: ")
 if (picPath == "d"):
@@ -29,12 +30,10 @@ class Pi:
 pi = []
 nextPos = "nn"
 numInUse = 0
-width = int(width)
-height = int(height)
 
 for i in range(0, len(MQTT_TOPICS)):
     print(i)
-    pi.append(Pi(i, "F", "F", "1", "0", "0", "0", False))
+    pi.append(Pi(i, "F", "F", "1", "0", 0, 0, False))
  
 # p1 = Pi(1, "F", "F", "1")
 # p2 = Pi(2, "F", "F", "1")
@@ -56,7 +55,11 @@ def on_message(client, userdata, msg):
     global numInUse
     global width
     global height
-
+    global orientation
+    global height
+    global width
+    global picPath
+    
     msg = msg.payload.decode('UTF-8')
     print(msg)
 
@@ -71,63 +74,46 @@ def on_message(client, userdata, msg):
             pi[i].IMU = msg[3]
             pi[i].ip = msg.partition("/")[2]
             print(pi[i].ip)
-            # if (pi[i].mA == "T"):
-            #     pi[i].mA = 1
-            # else:
-            #     pi[i].mA = 0
-            # if (pi[i].mB == "T"):
-            #     pi[i].mB = 1
-            # else:
-            #     pi[i].mB = 0
             
             if (prevA != pi[i].mA):
                 print("A change" + str(i))
-                if (pi[i].IMU == "1"):
-                    nextPos = str(int(pi[i].posX) - 1) + str(pi[i].posY)
-                elif (pi[i].IMU == "2"):
-                    nextPos = str(int(pi[i].posX) + 1) + str(pi[i].posY)
-                elif (pi[i].IMU == "3"):
-                    nextPos = str(pi[i].posX) + str(int(pi[i].posY) - 1)
-                elif (pi[i].IMU == "4"):
-                    nextPos = str(pi[i].posX) + str(int(pi[i].posY) + 1)
-                print(nextPos)
+                if (pi[i].IMU == "1" or pi[i].IMU == "2"):
+                    nextPos = str(pi[i].posX + 1) + str(pi[i].posY)
+                    if (pi[i].posX + 1 >= width):
+                        width = width + 1
+                elif (pi[i].IMU == "3" or pi[i].IMU == "4"):
+                    nextPos = str(pi[i].posX) + str(pi[i].posY + 1)
+                    if (pi[i].posY + 1 >= height):
+                        height = height + 1
             elif (prevB != pi[i].mB):
                 print("B change" + str(i))
-                if (pi[i].IMU == "1"):
-                    nextPos = str(pi[i].posX) + str(int(pi[i].posY) - 1)
-                elif (pi[i].IMU == "2"):
-                    nextPos = str(pi[i].posX) + str(int(pi[i].posY)+ 1)
-                elif (pi[i].IMU == "3"):
-                    nextPos = str(int(pi[i].posX) + 1) + str(pi[i].posY)
-                elif (pi[i].IMU == "4"):
-                    nextPos = str(int(pi[i].posX) - 1) + str(pi[i].posY)
-                print(nextPos)
-            print(str(numInUse) + " " + nextPos)
+                if (pi[i].IMU == "1" or pi[i].IMU == "2"):
+                    nextPos = str(pi[i].posX) + str(pi[i].posY + 1)
+                    if (pi[i].posY + 1 >= height):
+                        height = height + 1
+                elif (pi[i].IMU == "3" or pi[i].IMU == "4"):
+                    nextPos = str(pi[i].posX + 1) + str(pi[i].posY)
+                    if (pi[i].posX + 1 >= width):
+                        width = width + 1
 
             if (numInUse == 0 and nextPos == "nn"):
                 print("Anchor is: " + str(i))
                 pi[i].inUse = True
                 numInUse = numInUse + 1
-                if (pi[i].IMU == "1"):
-                    pi[i].posX = str(width - 1)
-                    pi[i].posY = str(height - 1)
-                elif (pi[i].IMU == "2"):
-                    pi[i].posX = str(0)
-                    pi[i].posY = str(0)
-                elif (pi[i].IMU == "3"):
-                    pi[i].posX = str(0)
-                    pi[i].posY = str(height - 1)
-                elif (pi[i].IMU == "4"):
-                    pi[i].posX = str(width - 1)
-                    pi[i].posY = str(0)
-                
-                print(pi[i].posX + " " + pi[i].posY)
+                height = 1
+                width = 1
+                if (pi[i].IMU == "1" or pi[i].IMU == "2"):
+                    orientation = "h"
+                elif (p[i].IMU == "3" or pi[i].IMU == "4"):
+                    orientation = "v"
+                crop_flex.main(height, width, pi[i].IMU, orientation, picPath)
+
             elif (numInUse != 0 and nextPos != "nn" and pi[i].inUse == False):
                 pi[i].inUse = True
                 numInUse = numInUse + 1
-                pi[i].posX = nextPos[0]
-                pi[i].posY = nextPos[1]
-                print("mhm")
+                pi[i].posX = int(nextPos[0])
+                pi[i].posY = int(nextPos[1])
+                crop_flex.main(height, width, pi[i].IMU, orientation, picPath)
     print("end")
 
  
