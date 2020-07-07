@@ -1,4 +1,3 @@
-# https://www.youtube.com/watch?v=Pb3FLznsdwI&t=449s
 
 import paho.mqtt.client as mqtt
 from PIL import Image
@@ -114,11 +113,12 @@ def on_message(client, userdata, msg):
 
                             for w in range(0, width):
 
-                                if (str(pi[counter].posX) + str(pi[counter].posY) == str(h) + str(w)):
-
+                                if h == pi[counter].posY and w == pi[counter].posX:
+                                    print("hello")
                                     filename = ("display" + str(pi[counter].posX) + str(pi[counter].posY) + ".jpg")
+                                    print(filename)
 
-                                    ftptesting.main(filename, pi[counter].ip, "pi", "raspberry", "export/" + filename)
+                                    ftptesting.main("image.jpg", pi[counter].ip, "pi", "password", "export/" + filename)
 
 
             elif (numInUse != 0 and nextPos != "nn" and pi[i].inUse == False):
@@ -134,11 +134,11 @@ def on_message(client, userdata, msg):
 
                             for w in range(0, width):
 
-                                if (str(pi[counter].posX) + str(pi[counter].posY) == str(h) + str(w)):
+                                if h == pi[counter].posY and w == pi[counter].posX:
 
                                     filename = ("display" + str(pi[counter].posX) + str(pi[counter].posY) + ".jpg")
 
-                                    ftptesting.main(filename, pi[counter].ip, "pi", "raspberry", "export/" + filename)
+                                    ftptesting.main("image.jpg", pi[counter].ip, "pi", "password", "export/" + filename)
 
 
 
