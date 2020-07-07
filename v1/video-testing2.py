@@ -32,7 +32,7 @@ print (outcrop)
 
 cap = cv2.VideoCapture('/Users/joelbinu/Desktop/ModDisplay /Image repo/Video_handling/cropped_video.mp4') # for testing on your local machine,change this link to the location of the cropped video that is produced by video_capability.py
 
-fourcc = cv2.VideoWriter_fourcc(*'mp4v') # setting the codec for the video output. (can be mp4, avi, mov, ...) (codes can be found on openCV documentation)
+fourcc = cv2.VideoWriter_fourcc(*'H264') # setting the codec for the video output. (can be mp4, avi, mov, ...) (codes can be found on openCV documentation)
 
 #outcrop2 = cv2.VideoWriter('/Users/joelbinu/Desktop/ModDisplay /Image repo/cropped_video3.mp4', fourcc, 60, (1024, 600))
 
