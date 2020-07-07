@@ -31,7 +31,7 @@ elif r == "v":
 
 cap = cv2.VideoCapture('/Users/joelbinu/Desktop/ModDisplay /Image repo/Video_handling/Original.mov') # for teesting on your local machine, change this path to the source of the original video
 
-fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+fourcc = cv2.VideoWriter_fourcc(*'H264')
 
 outcrop = cv2.VideoWriter('/Users/joelbinu/Desktop/ModDisplay /Image repo/Video_handling/cropped_video.mp4', fourcc, 60, (dw, dh)) # destination of the cropped video for the entire display orientation
 
