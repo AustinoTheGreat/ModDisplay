@@ -130,7 +130,7 @@ def main(h, w, r, o, address):
 
                     counter = counter + 1
 
-                    outcrop[int(str(j) + str(i))].write(img)
+                    outcrop[int(str(p) + str(q))].write(img)
 
                     q = q + 1
 
@@ -166,7 +166,7 @@ def main(h, w, r, o, address):
 
                     counter = counter + 1
 
-                    outcrop[int(str(j) + str(i))].write(img)
+                    outcrop[int(str(p) + str(q))].write(img)
 
                     q = q + 1
 
@@ -184,7 +184,7 @@ def main(h, w, r, o, address):
 
                     counter = counter + 1
 
-                    outcrop[int(str(j) + str(i))].write(img)
+                    outcrop[int(str(p) + str(q))].write(img)
 
                     q = q + 1
 
