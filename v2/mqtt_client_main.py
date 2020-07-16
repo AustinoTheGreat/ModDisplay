@@ -1,21 +1,25 @@
 
 import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 from PIL import Image
 import crop_flex
 import ftptesting
 import ftplib
+import keyboard
 
 
 MQTT_BROKER = "test.mosquitto.org"
 MQTT_PORT = 1883
+# MQTT_TOPICS = [("RPi/0", 0)]
 MQTT_TOPICS = [("RPi/0", 0), ("RPi/1", 0)]
 width = 0
 height = 0
 orientation = "n"
+userMsg = ""
 
 picPath = input("Enter your picture's full directory path or enter d to use default: ")
 if (picPath == "d"):
-    picPath = "pic/original-image.jpg"
+    picPath = "pic/large.jpg"
 
 #Use this class to store multiple Pi
 class Pi:
@@ -46,6 +50,7 @@ def printPos():
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
+    publish.single("RPi/Master", "type=pic/status=load", hostname = "test.mosquitto.org")
     client.subscribe(MQTT_TOPICS)
 
 
@@ -60,6 +65,7 @@ def on_message(client, userdata, msg):
     global height
     global width
     global picPath
+    global userMsg
 
     msg = msg.payload.decode('UTF-8')
     print(msg)
@@ -105,20 +111,16 @@ def on_message(client, userdata, msg):
                     orientation = "h"
                 elif (pi[i].IMU == "3" or pi[i].IMU == "4"):
                     orientation = "v"
+
                 crop_flex.main(height, width, pi[i].IMU, orientation, picPath)
 
                 for counter in range(0, len(MQTT_TOPICS)):
+                    if (pi[counter].ip != "0"):
+                        filename = ("display" + str(pi[counter].posX) + str(pi[counter].posY) + ".jpg")
+                        print(filename)
+                        print(pi[counter].ip)
 
-                        for h in range(0, height):
-
-                            for w in range(0, width):
-
-                                if h == pi[counter].posY and w == pi[counter].posX:
-                                    print("hello")
-                                    filename = ("display" + str(pi[counter].posX) + str(pi[counter].posY) + ".jpg")
-                                    print(filename)
-
-                                    ftptesting.main("image.jpg", pi[counter].ip, "pi", "password", "export/" + filename)
+                        ftptesting.main("image.jpg", pi[counter].ip, "pi", "password", "export/" + filename)
 
 
             elif (numInUse != 0 and nextPos != "nn" and pi[i].inUse == False):
@@ -129,21 +131,24 @@ def on_message(client, userdata, msg):
                 crop_flex.main(height, width, pi[i].IMU, orientation, picPath)
 
                 for counter in range(0, len(MQTT_TOPICS)):
+                    if (pi[counter].ip != "0"):
+                        filename = ("display" + str(pi[counter].posX) + str(pi[counter].posY) + ".jpg")
+                        print(filename)
+                        print(pi[counter].ip)
 
-                        for h in range(0, height):
-
-                            for w in range(0, width):
-
-                                if h == pi[counter].posY and w == pi[counter].posX:
-
-                                    filename = ("display" + str(pi[counter].posX) + str(pi[counter].posY) + ".jpg")
-
-                                    ftptesting.main("image.jpg", pi[counter].ip, "pi", "password", "export/" + filename)
+                        ftptesting.main("image.jpg", pi[counter].ip, "pi", "password", "export/" + filename)
 
 
+    try:
+        if keyboard.is_pressed("q"):
+            userMsg = "type=pic/status=unload"
+        else:
+            userMsg = "type=pic/status=load"
+    except:
+        print("nothing")
+    printPos()  
 
-
-    printPos()
+    publish.single("RPi/Master", userMsg, hostname = "test.mosquitto.org")
     # print("end")
 
 
