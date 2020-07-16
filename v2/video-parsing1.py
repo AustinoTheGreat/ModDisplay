@@ -37,16 +37,7 @@ def main(h, w, r, o, address):
 
     cap = cv2.VideoCapture(address) # for testing on your local machine, change this path to the source of the original video
 
-
-
-    fourcc = cv2.VideoWriter_fourcc(*'avc1') # for mac
-
-
-
-    #for counter in range(1,tot+1):
-
-    #    outcrop[counter] = cv2.VideoWriter('/Users/joelbinu/Desktop/ModDisplay/Image repo/Video_handling_comb/' + 'cropped_video' + str(counter) + '.mp4', fourcc, 30, disize) # destination of each of the cropped videos
-
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v') # for mac
 
     if (r == "2"):
         for i in range(0, w):
@@ -81,7 +72,7 @@ def main(h, w, r, o, address):
             q = 0
 
 
-    while True:
+    while cap.isOpened():
 
         p = 0
         q = 0
@@ -92,27 +83,43 @@ def main(h, w, r, o, address):
 
         width, height = int (cap.get(3)), int (cap.get(4))
 
+        print("video frame : width, height",width, height)
+
+        print ("frame shape", frame.shape[:2])
+
+        print("dw, dh", dw, dh)
+
         if not ret:
 
             break
 
         if (width > dw):
 
-            image = frame[0:height, int((width - dw)/ 2) : int(((width - dw)/ 2) + dw)]
+            image2 = frame[0:height, int((width - dw)/ 2) : int(((width - dw)/ 2) + dw)]
 
-        else:
+        elif (width < dw):
 
-            image = cv2.copyMakeBorder(frame, 0, 0, int((dw - width)/2), int((dw - width)/2), cv2.BORDER_CONSTANT, None, 0)
+            image2 = cv2.copyMakeBorder(frame, 0, 0, int((dw - width)/2), int((dw - width)/2), cv2.BORDER_CONSTANT, None, 0)
+
+        print ("frame shape after width adjustment", image2.shape[:2])
+
+        height, width = image2.shape[:2]
 
         if (height > dh):
 
-            image = image[int((height - dh)/2) : int(((height - dh)/2) + dh), 0:width]
+            image = image2[int((height - dh)/2) : int(((height - dh)/2) + dh), 0:width]
 
-        else:
+        elif (height < dh):
 
-            image = cv2.copyMakeBorder(image, int((dh - height)/2) , int((dh - height)/2), 0, 0, cv2.BORDER_CONSTANT, None, 0)
+            image = cv2.copyMakeBorder(image2, int((dh - height)/2) , int((dh - height)/2), 0, 0, cv2.BORDER_CONSTANT, None, 0)
+
 
         width, height = dw, dh
+
+        print("Overall display width and height", dw, dh)
+
+        print ("frame shape after height and width adjustment", image.shape[:2]) # for h = 1 and w = 2, the output here should be 600 2048
+                                # for h = 2 and w = 2, the output here should be 1200 2048
 
 
         if (r == "2"):
@@ -180,9 +187,8 @@ def main(h, w, r, o, address):
 
                 q = 0
 
-
-
+        print("\n")
 
     cv2.destroyAllWindows()
 
-main(2,2,'2','h', '/Users/joelbinu/Desktop/ModDisplay/Image repo/Video_handling_comb/Original.mov')
+main(2,3,'2','h', '/Users/joelbinu/Desktop/ModDisplay/Image repo/Video_handling_comb/Original.mov')
