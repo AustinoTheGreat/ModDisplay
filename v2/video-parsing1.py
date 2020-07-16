@@ -83,12 +83,6 @@ def main(h, w, r, o, address):
 
         width, height = int (cap.get(3)), int (cap.get(4))
 
-        print("video frame : width, height",width, height)
-
-        print ("frame shape", frame.shape[:2])
-
-        print("dw, dh", dw, dh)
-
         if not ret:
 
             break
@@ -101,8 +95,6 @@ def main(h, w, r, o, address):
 
             image2 = cv2.copyMakeBorder(frame, 0, 0, int((dw - width)/2), int((dw - width)/2), cv2.BORDER_CONSTANT, None, 0)
 
-        print ("frame shape after width adjustment", image2.shape[:2])
-
         height, width = image2.shape[:2]
 
         if (height > dh):
@@ -113,15 +105,8 @@ def main(h, w, r, o, address):
 
             image = cv2.copyMakeBorder(image2, int((dh - height)/2) , int((dh - height)/2), 0, 0, cv2.BORDER_CONSTANT, None, 0)
 
-
         width, height = dw, dh
-
-        print("Overall display width and height", dw, dh)
-
-        print ("frame shape after height and width adjustment", image.shape[:2]) # for h = 1 and w = 2, the output here should be 600 2048
-                                # for h = 2 and w = 2, the output here should be 1200 2048
-
-
+        
         if (r == "2"):
 
             for i in range(0, w):
