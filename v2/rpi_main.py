@@ -9,8 +9,25 @@ import board
 import busio
 import adafruit_msa301
 import paho.mqtt.publish as publish
+import paho.mqtt.client as mqtt
 import subprocess
 import re
+from mpu6050 import mpu6050
+
+MQTT_BROKER = "test.mosquitto.org"
+MQTT_PORT = 1883
+MQTT_TOPIC = "RPi/Master"
+
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code " + str(rc))
+    mqttInfo()
+    client.subscribe(MQTT_TOPIC)
+
+def on_message(client, userdata, msg):
+    msg = msg.payload.decode("UTF-8")
+    print(msg)
+    mqttInfo()
+  
 
 # Don't need the class, realized after I made it
 class Pi:
@@ -23,31 +40,25 @@ class Pi:
 mSensor1 = InputDevice(17)
 mSensor2 = InputDevice(18)
 
-i2c = busio.I2C(board.SCL, board.SDA)
-msa = adafruit_msa301.MSA301(i2c)
+# i2c = busio.I2C(board.SCL, board.SDA)
+# msa = adafruit_msa301.MSA301(i2c)
+sensor = mpu6050(0x68)
 
-p1 = Pi(0, False, False, 1)
+p1 = Pi(1, False, False, 1)
 
 def mqttInfo():
     #msgs = [{'topic':"RPi/1", 'payload':p1.mA}, ("RPi/1", p1.mB, 0, False), ("RPi/1", p1.IMU, 0, False)]
     #publish.multiple(msgs, hostname="test.mosquitto.org")
-    publish.single("RPi/" + p1.number, p1.number + p1.mA[0] + p1.mB[0] + p1.IMU + "/"
-                   + re.match("([^\s]+)", str(subprocess.getstatusoutput("hostname -I")[1])).group(0),
-                   hostname = "test.mosquitto.org")
-
-
-
-while True:
-    #print("%f %f %f" % msa.acceleration)
-    #print(msa.acceleration, mSensor1)
-    if msa.acceleration[1] < -7:
-        p1.IMU = 1
-    elif msa.acceleration[1] > 7:
+    msa = sensor.get_accel_data()
+    print(msa)
+    if msa["x"] < -7:
         p1.IMU = 2
-    elif msa.acceleration[0] < -7:
-        p1.IMU = 3
-    elif msa.acceleration[0] > 7:
+    elif msa["x"] > 7:
+        p1.IMU = 1
+    elif msa["y"] < -7:
         p1.IMU = 4
+    elif msa["y"] > 7:
+        p1.IMU = 3
     p1.IMU = str(p1.IMU)
     p1.number = str(p1.number)
     p1.mA = str(mSensor1.is_active)
@@ -55,8 +66,20 @@ while True:
     
     print(p1.number + p1.mA[0] + p1.mB[0] + p1.IMU + "/" +
           re.match("([^\s]+)", str(subprocess.getstatusoutput("hostname -I")[1])).group(0))
-    mqttInfo()
+
+    publish.single("RPi/" + p1.number, p1.number + p1.mA[0] + p1.mB[0] + p1.IMU + "/"
+                   + re.match("([^\s]+)", str(subprocess.getstatusoutput("hostname -I")[1])).group(0),
+                   hostname = "test.mosquitto.org")
+
+
+# while True:
     
-    time.sleep(3)
+    #print("%f %f %f" % msa.acceleration)
+    #print(msa.acceleration, mSensor1)
     
-print("Done")
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+
+client.connect(MQTT_BROKER, MQTT_PORT, 60)
+client.loop_forever()
