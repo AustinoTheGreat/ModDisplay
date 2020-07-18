@@ -37,7 +37,7 @@ def main(h, w, r, o, address):
 
     cap = cv2.VideoCapture(address) # for testing on your local machine, change this path to the source of the original video
 
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v') # for mac
+    fourcc = cv2.VideoWriter_fourcc(*'avc1') # for mac
 
     if (r == "2"):
         for i in range(0, w):
