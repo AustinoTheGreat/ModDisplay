@@ -99,21 +99,21 @@ def main(h, w, r, o, address):
 
         if (height > dh):
 
-            image = image2[int((height - dh)/2) : int(((height - dh)/2) + dh), 0:width]
+            image2 = image2[int((height - dh)/2) : int(((height - dh)/2) + dh), 0:width]
 
         elif (height < dh):
 
-            image = cv2.copyMakeBorder(image2, int((dh - height)/2) , int((dh - height)/2), 0, 0, cv2.BORDER_CONSTANT, None, 0)
+            image2 = cv2.copyMakeBorder(image2, int((dh - height)/2) , int((dh - height)/2), 0, 0, cv2.BORDER_CONSTANT, None, 0)
 
         width, height = dw, dh
-        
+
         if (r == "2"):
 
             for i in range(0, w):
 
                 for j in range(0, h):
 
-                    img = image[int(height/h) * j : int(height/h) * (j + 1), int(width/w) * i : int(width/w) * (i + 1)]
+                    img = image2[int(height/h) * j : int(height/h) * (j + 1), int(width/w) * i : int(width/w) * (i + 1)]
 
                     outcrop[int(str(p) + str(q))].write(img)
 
@@ -130,7 +130,7 @@ def main(h, w, r, o, address):
 
                 for j in range(h, 0, -1):
 
-                    img = image[int(height/h) * (j - 1) : int(height/h) * j, int(width/w) * (i - 1) : int(width/w) * i]
+                    img = image2[int(height/h) * (j - 1) : int(height/h) * j, int(width/w) * (i - 1) : int(width/w) * i]
 
                     outcrop[int(str(p) + str(q))].write(img)
 
@@ -146,7 +146,7 @@ def main(h, w, r, o, address):
 
                 for j in range(h, 0, -1):
 
-                    img = image[int(height/h) * (j - 1) : int(height/h) * j, int(width/w) * i : int(width/w) * (i + 1)]
+                    img = image2[int(height/h) * (j - 1) : int(height/h) * j, int(width/w) * i : int(width/w) * (i + 1)]
 
                     outcrop[int(str(p) + str(q))].write(img)
 
@@ -162,7 +162,7 @@ def main(h, w, r, o, address):
 
                 for j in range(0, h):
 
-                    img = image[int(height/h) * j : int(height/h) * (j + 1), int(width/w) * (i - 1) : int(width/w) * i]
+                    img = image2[int(height/h) * j : int(height/h) * (j + 1), int(width/w) * (i - 1) : int(width/w) * i]
 
                     outcrop[int(str(p) + str(q))].write(img)
 
@@ -172,8 +172,6 @@ def main(h, w, r, o, address):
 
                 q = 0
 
-        print("\n")
-
     cv2.destroyAllWindows()
 
-main(2,3,'2','h', '/Users/joelbinu/Desktop/ModDisplay/Image repo/Video_handling_comb/Original.mov')
+main(1,2,'2','h', '/Users/joelbinu/Desktop/ModDisplay/Image repo/Video_handling_comb/video.mp4')
