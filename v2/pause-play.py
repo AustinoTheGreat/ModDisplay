@@ -30,7 +30,8 @@ def play (current_time):
 
     player.play()
 
-
+sleep(2)
+    
 current_time = pause()
 
 sleep(5)
