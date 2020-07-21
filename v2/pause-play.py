@@ -4,20 +4,20 @@ from time import time, sleep
 
 from omxplayer.player import OMXPlayer as omxplayer
 
-player = vlc.MediaPlayer('/home/pi/ftp/files/cropped_video10.mp4')
+video_path = '/home/pi/ftp/files/cropped_video10.mp4'
+
+player = vlc.MediaPlayer(video_path)
 
 player.play()
 
-sleep(2)
-
-print(player.get_length())
+print(player.duration())
 
 
 def pause():
 
     player.pause()
 
-    current_time = player.get_time() # as a percentage of the length of the video
+    current_time = player.position() # as a percentage of the length of the video
 
     print(current_time)
     
