@@ -38,6 +38,6 @@ sleep(2)
 
 play(current_time)
 
-player.quit()
+# player.quit()
 
 # player.toggle_fullscreen can be used to switch between full screen and window size 
