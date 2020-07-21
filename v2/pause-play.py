@@ -34,7 +34,7 @@ sleep(2)
     
 current_time = pause()
 
-sleep(5)
+sleep(2)
 
 play(current_time)
 
