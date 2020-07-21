@@ -13,10 +13,13 @@ import paho.mqtt.client as mqtt
 import subprocess
 import re
 from mpu6050 import mpu6050
+from subprocess import Popen, check_call
+import os
 
 MQTT_BROKER = "test.mosquitto.org"
 MQTT_PORT = 1883
 MQTT_TOPIC = "RPi/Master"
+chromiumStatus = False
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
@@ -24,11 +27,27 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe(MQTT_TOPIC)
 
 def on_message(client, userdata, msg):
+    global chromiumStatus
     msg = msg.payload.decode("UTF-8")
     print(msg)
+    if (msg[16] == "n" and chromiumStatus == False):
+        if (msg[5] == "p"):
+            rc = Popen("DISPLAY=:0 chromium 'file:///home/pi/ftp/files/image.jpg' --kiosk", shell = True)
+        elif (msg[5] == "v"):
+            rc = Popen("DISPLAY=:0 chromium 'file:///home/pi/ftp/files/video.mp4' --kiosk", shell = True)
+        chromiumStatus = True
+    elif (msg[16] == "n" and chromiumStatus == True):
+        Popen("killall -KILL chromium", shell = True)
+        if (msg[5] == "p"):
+            rc = Popen("DISPLAY=:0 chromium 'file:///home/pi/ftp/files/image.jpg' --kiosk", shell = True)
+        elif (msg[5] == "v"):
+            rc = Popen("DISPLAY=:0 chromium 'file:///home/pi/ftp/files/video.mp4' --kiosk", shell = True)
+    elif (msg[5] == "q"):
+        Popen("killall -KILL chromium", shell = True)
+        sys.exit()
     mqttInfo()
   
-
+  
 # Don't need the class, realized after I made it
 class Pi:
     def __init__(self, number, mA, mB, IMU):
