@@ -177,7 +177,7 @@ def on_message(client, userdata, msg):
     
 
     tcflush(sys.stdin, TCIFLUSH)
-    print("Press c to continue: ")
+    print("Press c to continue, press q to quit everything, press n to load in new video or picture file: ")
     if keyboard.read_key() == "n":
         picPath = input("Please enter your new file's path: ")
         if (picPath[-3: ] == "jpg"):
