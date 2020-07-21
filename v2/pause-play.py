@@ -26,7 +26,7 @@ def pause():
 
 def play (current_time):
     
-    player.set_time(current_time)
+    player.seek(current_time)
 
     player.play()
 
