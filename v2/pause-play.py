@@ -2,7 +2,7 @@ import time
 
 from time import time, sleep
 
-import vlc # pip install python-vlc 
+from omxplayer.player import OMXPlayer as omxplayer
 
 player = vlc.MediaPlayer('/home/pi/ftp/files/cropped_video10.mp4')
 
