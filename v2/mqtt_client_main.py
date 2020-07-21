@@ -21,6 +21,7 @@ height = 0
 orientation = "n"
 userMsg = "type=/status=/vid=/"
 
+
 picPath = input("Enter your file's full directory path or enter d to use default: ")
 if (picPath == "d"):
     picPath = "pic/large.jpg"
@@ -161,6 +162,8 @@ def on_message(client, userdata, msg):
                 numInUse = numInUse + 1
                 pi[i].posX = int(nextPos[0])
                 pi[i].posY = int(nextPos[1])
+                
+                userMsg = userMsg.replace("old", "new")
 
                 fileTransfer(height, width, pi[i].IMU, orientation, picPath)
                 # crop_flex.main(height, width, pi[i].IMU, orientation, picPath)
@@ -172,12 +175,9 @@ def on_message(client, userdata, msg):
 
                 #         ftptesting.main("image.jpg", pi[counter].ip, "pi", "password", "export/" + filename)
     
-    print("hello")
-
-    if userMsg[16] == "n":
-        userMsg = userMsg.replace("new", "old")
 
     tcflush(sys.stdin, TCIFLUSH)
+    print("Press c to continue: ")
     if keyboard.read_key() == "n":
         picPath = input("Please enter your new file's path: ")
         if (picPath[-3: ] == "jpg"):
@@ -186,11 +186,14 @@ def on_message(client, userdata, msg):
             userMsg = "type=vid/status=new/vid=play/"
         fileTransfer(height, width, pi[i].IMU, orientation, picPath)
     elif keyboard.read_key() == "q":
-        sys. exit()
+        userMsg = "type=qui/status=old/vid=play/"
+        publish.single("RPi/Master", userMsg, hostname = "test.mosquitto.org")
+        sys.exit()
     elif userMsg[5] == "v" and keyboard.read_key() == "p":
         userMsg = "type=vid/status=old/vid=play/"
     elif userMsg[5] == "v" and keyboard.read_key() == "f":
         userMsg = "type=vid/status=old/vid=free/"
+
 
     # try:
     #     if keyboard.is_pressed("n"):
@@ -221,6 +224,8 @@ def on_message(client, userdata, msg):
     printPos()  
     print(userMsg)
     publish.single("RPi/Master", userMsg, hostname = "test.mosquitto.org")
+    if userMsg[16] == "n":
+        userMsg = userMsg.replace("new", "old")
     # print("end")
 
 
