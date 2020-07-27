@@ -168,10 +168,12 @@ def on_message(client, userdata, msg):
                 pi[i].posX = int(nextPos[0])
                 pi[i].posY = int(nextPos[1])
                 
-                userMsg = userMsg.replace("old", "add")
-                userMsg = userMsg.replace("play", "free")
-                # userMsg = userMsg.replace("old", "new")
-                # userMsg = userMsg.replace("play", "free")
+                if (userMsg[5] == "v"):
+                    userMsg = userMsg.replace("old", "add")
+                    userMsg = userMsg.replace("play", "free")
+                else:
+                    userMsg = userMsg.replace("old", "new")
+                    userMsg = userMsg.replace("play", "free")
 
                 fileTransfer(height, width, pi[i].IMU, orientation, picPath)
                 # crop_flex.main(height, width, pi[i].IMU, orientation, picPath)
@@ -255,8 +257,10 @@ def on_message(client, userdata, msg):
     printPos()  
     print(userMsg)
     publish.single("RPi/Master", userMsg, hostname = MQTT_BROKER)
+
     if userMsg[16] == "n":
         userMsg = userMsg.replace("new", "old")
+    if userMsg[16] == "a":
         userMsg = userMsg.replace("add", "old")
     # print("end")
 
