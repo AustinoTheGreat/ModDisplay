@@ -44,9 +44,10 @@ def on_message(client, userdata, msg):
         elif (msg[5] == "v"):
             player = omxplayer("/home/pi/ftp/files/video.mp4")
             player.play()
-            sleep(1)
+            sleep(0.3)
             # rc = Popen("DISPLAY=:0 chromium 'file:///home/pi/ftp/files/video.mp4' --kiosk", shell = True)
             player.pause()
+            pauseState = "t"
         status = True
     elif (msg[16] == "n" and status == True):
         if (msg[34] == "p"):
@@ -64,8 +65,9 @@ def on_message(client, userdata, msg):
             #rc = Popen("DISPLAY=:0 chromium 'file:///home/pi/ftp/files/video.mp4' --kiosk", shell = True)
             player = omxplayer("/home/pi/ftp/files/video.mp4")
             player.play()
-            sleep(1)
+            sleep(0.3)
             player.pause()
+            pauseState = "t"
     
     elif (msg[5] == "q"):
         #Popen("killall -KILL chromium", shell = True)
@@ -86,7 +88,7 @@ def on_message(client, userdata, msg):
         # curTime = msg.split("/")[4]
         # player = player.seek(float(curTime))
         player.play()
-        pauseStatus = "f"
+        pauseState = "f"
     elif (msg[16] == "a" and msg[5] == "v"):
         #Popen("killall omxplayer", shell = True)
         print("hello")
@@ -97,7 +99,10 @@ def on_message(client, userdata, msg):
         curTime = msg.split("/")[4]
         print(curTime)
         player.set_position(float(curTime))
-        sleep(3)
+        sleep(0.5)
+        player.pause()
+        pauseState = "t"
+        # sleep(3)
         # player.pause()
         #pauseState = "t"
         
