@@ -22,7 +22,7 @@ MQTT_PORT = 1883
 MQTT_TOPIC = "RPi/Master"
 status = False
 curTime = "0"
-pauseState = "f"
+pauseState = "t"
 player = "" # omxplayer("/home/pi/ftp/files/video.mp4")
 
 def on_connect(client, userdata, flags, rc):
@@ -45,7 +45,7 @@ def on_message(client, userdata, msg):
             player = omxplayer("/home/pi/ftp/files/video.mp4")
             # rc = Popen("DISPLAY=:0 chromium 'file:///home/pi/ftp/files/video.mp4' --kiosk", shell = True)
             player.play()
-            sleep(1)
+            sleep(0.3)
             player.pause()
         status = True
     elif (msg[16] == "n" and status == True):
@@ -64,7 +64,7 @@ def on_message(client, userdata, msg):
             #rc = Popen("DISPLAY=:0 chromium 'file:///home/pi/ftp/files/video.mp4' --kiosk", shell = True)
             player = omxplayer("/home/pi/ftp/files/video.mp4")
             player.play()
-            sleep(1)
+            sleep(0.3)
             player.pause()
     
     elif (msg[5] == "q"):
@@ -83,10 +83,11 @@ def on_message(client, userdata, msg):
         pauseState = "t"
         player.pause()
     elif (pauseState == "t" and msg[24] == "p" and msg[5] == "v" and msg[16] == "o" and status == True):
+        print("AYEEE")
         # curTime = msg.split("/")[4]
         # player = player.seek(float(curTime))
         player.play()
-        pauseStatus = "f"
+        pauseState = "f"
     elif (msg[16] == "a" and msg[5] == "v"):
         print("YAY")
         # Popen("killall omxplayer", shell = True)
@@ -95,11 +96,13 @@ def on_message(client, userdata, msg):
         player = omxplayer("/home/pi/ftp/files/video.mp4")
         curTime = msg.split("/")[4]
         print(curTime)
+        status = True
         player.set_position(float(curTime))
         # player.play()
-        state = True
-        pauseState = "f"
-        sleep(3)
+        sleep(0.5)
+        player.pause()
+        pauseState = "t"
+        # sleep(3)
     
     if (msg[5] == "v"):
         curTime = str(player.position())
